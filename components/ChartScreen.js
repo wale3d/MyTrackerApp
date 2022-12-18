@@ -6,6 +6,7 @@ import {
   VictoryTheme,
   VictoryLine,
 } from "victory-native";
+import database from "../config";
 
 const ChartScreen = () => {
   const data = [
@@ -35,9 +36,32 @@ const ChartScreen = () => {
     },
   ];
 
+  const getData = () => {
+    const dbRef = database.ref();
+    dbRef
+      .child("weights")
+      .get()
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          //   console.log(snapshot.val());
+          setDataForChart(snapshot.val());
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const setDataForChart = (values) => {
+    const data = [values];
+  };
+
   return (
     <View>
-      <VictoryChart>
+      {getData()}
+      <VictoryChart theme={VictoryTheme.material}>
         <VictoryLine data={data} x="date" y="weight" interpolation="natural" />
       </VictoryChart>
     </View>

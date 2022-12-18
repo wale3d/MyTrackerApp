@@ -15,11 +15,16 @@ const WeightInput = (props) => {
   const [number, onChangeNumber] = React.useState(null);
 
   const saveToDb = () => {
-    const currentDate = new Date().toISOString().substring(0, 10);
-    console.log(currentDate);
-    database.ref("date/" + currentDate).set({
-      weight: number,
-    });
+    const nowDate = new Date().toISOString();
+    const currentDate = nowDate.substring(0, 10);
+    const currentTime = nowDate.substring(11, 19);
+    console.log(currentTime);
+    database
+      .ref("weights/" + currentDate.substring(0, 10))
+      .child(currentTime)
+      .set({
+        weight: number,
+      });
 
     props.navigation.navigate("chart");
   };
