@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import {
   VictoryChart,
@@ -9,32 +9,28 @@ import {
 import database from "../config";
 
 const ChartScreen = () => {
-  const data = [
-    {
-      date: new Date("2022-12-10"),
-      weight: 123,
-    },
-    {
-      date: new Date("2022-12-11"),
-      weight: 110,
-    },
-    {
-      date: new Date("2022-12-12"),
-      weight: 143,
-    },
-    {
-      date: new Date("2022-12-13"),
-      weight: 176,
-    },
-    {
-      date: new Date("2022-12-14"),
-      weight: 167,
-    },
-    {
-      date: new Date("2022-12-15"),
-      weight: 300,
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [values, setValues] = useState({});
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const setDataForChart = (values) => {
+    let dataL = [];
+    if (values) {
+      Object.keys(values).forEach((date) => {
+        Object.keys(values[date]).forEach((time) => {
+          dataL.push({
+            date: new Date(date + "T" + time + "Z"),
+            weight: parseInt(values[date][time].weight),
+          });
+        });
+      });
+    }
+
+    return dataL;
+  };
 
   const getData = () => {
     const dbRef = database.ref();
@@ -43,8 +39,8 @@ const ChartScreen = () => {
       .get()
       .then((snapshot) => {
         if (snapshot.exists()) {
-          //   console.log(snapshot.val());
-          setDataForChart(snapshot.val());
+          let values = snapshot.val();
+          setValues(values);
         } else {
           console.log("No data available");
         }
@@ -54,15 +50,15 @@ const ChartScreen = () => {
       });
   };
 
-  const setDataForChart = (values) => {
-    const data = [values];
-  };
-
   return (
     <View>
-      {getData()}
       <VictoryChart theme={VictoryTheme.material}>
-        <VictoryLine data={data} x="date" y="weight" interpolation="natural" />
+        <VictoryLine
+          data={setDataForChart(values)}
+          x="date"
+          y="weight"
+          interpolation="natural"
+        />
       </VictoryChart>
     </View>
   );
