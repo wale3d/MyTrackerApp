@@ -57,7 +57,7 @@ const ChartScreen = () => {
           data={setDataForChart(values)}
           x="date"
           y="weight"
-          interpolation="natural"
+          // interpolation="natural"
         />
       </VictoryChart>
     </View>
