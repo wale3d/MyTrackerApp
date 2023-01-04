@@ -15,6 +15,14 @@ class Main extends Component {
     this.props.navigation.navigate("chart");
   };
 
+  navigateToFoodInputScreen = () => {
+    this.props.navigation.navigate("foodInput");
+  };
+
+  navigateToFoodListScreen = () => {
+    this.props.navigation.navigate("foodList");
+  };
+
   render() {
     return (
       <>
@@ -25,6 +33,14 @@ class Main extends Component {
         <Button
           onPress={this.navigateToChartScreen}
           title="Check out progress"
+        />
+        <Button
+          onPress={this.navigateToFoodInputScreen}
+          title="Enter Food Eaten"
+        />
+        <Button
+          onPress={this.navigateToFoodListScreen}
+          title="Check out food list"
         />
       </>
     );
